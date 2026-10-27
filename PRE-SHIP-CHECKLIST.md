@@ -15,18 +15,19 @@ Run this before every public launch, major feature release, or when opening a pr
 - [ ] Only necessary data is collected (minimisation)
 - [ ] Account deletion actually removes or anonymises personal data
 
-## Security
+## Security (Critical Items First)
 
+- [ ] **No secrets** (service-role, Stripe secret, API keys, DB URLs, JWT secrets) in client-side code or public repos
 - [ ] RLS (or equivalent) enabled and restrictive on every table with user/sensitive data
 - [ ] Policies use ownership checks (`auth.uid() = user_id`), not just “is authenticated”
-- [ ] No secret, service-role, or privileged API keys in client bundles or public repos
-- [ ] Ownership / role checks on all data access endpoints
+- [ ] Ownership / role checks on all data access endpoints (no pure IDOR)
+- [ ] Admin, debug, and internal routes require authentication + authorisation
 - [ ] Webhooks (especially payments) verify signatures
-- [ ] Admin and sensitive routes require authentication + authorisation
-- [ ] Rate limiting on costly or abuse-prone endpoints
-- [ ] No public `.env`, `.git`, source maps, or backup files
+- [ ] No public `.env`, `.git`, source maps, or backup files reachable
 - [ ] Preview / debug endpoints locked down or removed for production
+- [ ] Rate limiting on costly or abuse-prone endpoints
 - [ ] HTTPS enforced
+- [ ] User input is escaped / sanitised (XSS protection)
 
 ## Product-Specific
 
@@ -34,10 +35,11 @@ Run this before every public launch, major feature release, or when opening a pr
 - [ ] If children’s product or high-risk processing: DPIA considered
 - [ ] Incident / breach notification contacts and basic process known
 
-## Final
+## Final Attacker Tests
 
 - [ ] Tested as an unauthenticated attacker with the public/anon key
 - [ ] Tested that User A cannot read or modify User B’s data by changing IDs
+- [ ] Opened DevTools → Sources and confirmed no secrets visible in the bundle
 - [ ] Tested that marketing emails and tracking respect opt-out / consent
 - [ ] Agent rules or compliance notes included in the project for future changes
 
